@@ -25,12 +25,31 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Extract Android project
+      - name: Extract project
         run: |
           mkdir project
           ZIP_FILE=$(find . -maxdepth 1 -name '*.zip' | head -n 1)
           test -n "$ZIP_FILE"
           unzip -o "$ZIP_FILE" -d project
+
+      - name: Fix Java Kotlin compatibility
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("project/app/build.gradle.kts")
+          s = p.read_text()
+          fix = """
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+              kotlinOptions {
+                  jvmTarget = "17"
+              }
+          """
+          s = s.replace("android {", "android {\n" + fix, 1)
+          p.write_text(s)
+          PY
 
       - name: Build APK
         run: gradle -p project assembleDebug
