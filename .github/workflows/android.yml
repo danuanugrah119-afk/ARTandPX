@@ -1,4 +1,3 @@
-
 name: Build ARTandPX APK
 
 on:
@@ -25,38 +24,41 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Extract project
+      - name: Extract ARTandPX v2
         run: |
-          mkdir project
-          ZIP_FILE=$(find . -maxdepth 1 -name '*.zip' | head -n 1)
-          test -n "$ZIP_FILE"
-          unzip -o "$ZIP_FILE" -d project
+          ZIP_FILE="ARTandPX-v2-Core-Source.zip"
+          test -f "$ZIP_FILE" || {
+            echo "ARTandPX v2 ZIP not found!"
+            exit 1
+          }
 
-      - name: Fix Java Kotlin compatibility
+          mkdir -p project
+          unzip -oq "$ZIP_FILE" -d project
+
+          SETTINGS_FILE=$(find project -type f \( \
+            -name settings.gradle \
+            -o -name settings.gradle.kts \
+          \) -print -quit)
+
+          test -n "$SETTINGS_FILE" || {
+            echo "Gradle settings file not found!"
+            exit 1
+          }
+
+          ROOT_DIR=$(dirname "$SETTINGS_FILE")
+          echo "PROJECT_DIR=$ROOT_DIR" >> "$GITHUB_ENV"
+
+          echo "Building project from: $ROOT_DIR"
+          ls -la "$ROOT_DIR"
+
+      - name: Build ARTandPX v2 APK
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path("project/app/build.gradle.kts")
-          s = p.read_text()
-          fix = """
-              compileOptions {
-                  sourceCompatibility = JavaVersion.VERSION_17
-                  targetCompatibility = JavaVersion.VERSION_17
-              }
-              kotlinOptions {
-                  jvmTarget = "17"
-              }
-          """
-          s = s.replace("android {", "android {\n" + fix, 1)
-          p.write_text(s)
-          PY
+          gradle -p "$PROJECT_DIR" assembleDebug
 
-      - name: Build APK
-        run: gradle -p project assembleDebug
-
-      - name: Upload APK
+      - name: Upload ARTandPX v2 APK
         uses: actions/upload-artifact@v4
         with:
-          name: ARTandPX-APK
-          path: project/app/build/outputs/apk/debug/*.apk
+          name: ARTandPX-v2-APK
+          path: ${{ env.PROJECT_DIR }}/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
           
