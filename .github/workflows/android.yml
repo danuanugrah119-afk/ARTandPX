@@ -26,7 +26,7 @@ jobs:
 
       - name: Extract ARTandPX v2
         run: |
-          ZIP_FILE="ARTandPX-v2-Core-Source.zip"
+          ZIP_FILE="ARTandPX-v2.3-Combined-Source.zip"
           test -f "$ZIP_FILE" || {
             echo "ARTandPX v2 ZIP not found!"
             exit 1
@@ -58,7 +58,7 @@ jobs:
       - name: Upload ARTandPX v2 APK
         uses: actions/upload-artifact@v4
         with:
-          name: ARTandPX-v2-APK
+          name: ARTandPX-v2.3(continue)-APK
           path: ${{ env.PROJECT_DIR }}/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           
