@@ -26,9 +26,9 @@ jobs:
 
       - name: Extract ARTandPX v(beta v0.2)
         run: |
-          ZIP_FILE="ARTandPX-Beta-v0.2-Source.zip"
+          ZIP_FILE="ARTandPX-Beta-v0_2-Source.zip"
           test -f "$ZIP_FILE" || {
-            echo "ARTandPX-Beta-v0.2-Source.zip"
+            echo "ARTandPX-Beta-v0_2-Source.zip"
             exit 1
           }
 
