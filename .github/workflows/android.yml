@@ -26,9 +26,9 @@ jobs:
 
       - name: Extract ARTandPX v2
         run: |
-          ZIP_FILE="ARTandPX-v2.3-Combined-Source.zip"
+          ZIP_FILE="ARTandPX-v2.3-Combined-Source-2.zip"
           test -f "$ZIP_FILE" || {
-            echo "ARTandPX v2 ZIP not found!"
+            echo "ARTandPX-v2.3-Combined-Source-2.zip"
             exit 1
           }
 
@@ -55,7 +55,7 @@ jobs:
         run: |
           gradle -p "$PROJECT_DIR" assembleDebug
 
-      - name: Upload ARTandPX v2 APK
+      - name: Upload ARTandPX v2.3(continue)APK
         uses: actions/upload-artifact@v4
         with:
           name: ARTandPX-v2.3(continue)-APK
