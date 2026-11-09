@@ -24,11 +24,11 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Extract ARTandPX v(beta v0.6)
+      - name: Extract ARTandPX v(beta v0.6complete)
         run: |
-          ZIP_FILE="ARTandPX-Beta-v0.6-Source2.zip"
+          ZIP_FILE="ARTandPX-Beta-v0.6-Complete.zip"
           test -f "$ZIP_FILE" || {
-            echo "ARTandPX-Beta-v0.6-Source2.zip"
+            echo "ARTandPX-Beta-v0.6-Complete.zip"
             exit 1
           }
 
@@ -51,14 +51,14 @@ jobs:
           echo "Building project from: $ROOT_DIR"
           ls -la "$ROOT_DIR"
 
-      - name: Build ARTandPX v2.7(beta0.6) APK
+      - name: Build ARTandPX v2.7(beta0.6complete) APK
         run: |
           gradle -p "$PROJECT_DIR" assembleDebug
 
-      - name: Upload ARTandPX v2.7(beta0.6)APK
+      - name: Upload ARTandPX v2.7(beta0.6complete)APK
         uses: actions/upload-artifact@v4
         with:
-          name: ARTandPX-v2.7(beta0.6)-APK
+          name: ARTandPX-v2.7(beta0.6complete)-APK
           path: ${{ env.PROJECT_DIR }}/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           
